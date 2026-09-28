@@ -1,0 +1,33 @@
+services:
+  docker-hub-monitor:
+    build: .
+    image: meidlinger1024/docker-hub-monitor:latest
+    container_name: docker-hub-monitor
+    restart: unless-stopped
+    ports:
+      - "19843:5000"
+    volumes:
+      # Application (and SQLite data) live in ./python on the host. The bind
+      # mount must be writable by UID 1000 (the container user).
+      - ./python:/app/python
+    # If the bind mount is not writable by UID 1000, run as root instead by
+    # uncommenting the next line (at the cost of running unprivileged).
+    # user: "0:0"
+    environment:
+      - TZ=Asia/Shanghai
+      # Fail loudly instead of silently disabling authentication.
+      - AUTH_SECRET=${AUTH_SECRET:?请在项目根目录的 .env 中设置 AUTH_SECRET}
+      - REFRESH_INTERVAL=${REFRESH_INTERVAL:-6}
+      - DEFAULT_DAYS=${DEFAULT_DAYS:-14}
+      # A dedicated scheduler process runs in this container.
+      - EMBEDDED_SCHEDULER=false
+      # Optional outbound proxy for Docker Hub. Leave empty to connect directly.
+      - HTTP_PROXY=${HTTP_PROXY:-}
+      - HTTPS_PROXY=${HTTPS_PROXY:-}
+      - NO_PROXY=${NO_PROXY:-localhost,127.0.0.1}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:5000/api/health', timeout=4).status == 200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s

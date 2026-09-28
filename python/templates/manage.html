@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1 class="page-head__title">镜像管理</h1>
+        <p class="page-head__sub" id="manageSub">添加或移除需要监控的 Docker Hub 仓库</p>
+    </div>
+    <div class="page-head__actions">
+        <button type="button" class="btn" id="reloadImages">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/><path d="M23 4v6h-6"/></svg>
+            重新加载
+        </button>
+    </div>
+</div>
+
+<div class="card reveal">
+    <header class="card__head">
+        <div>
+            <h3 class="card__title">添加镜像</h3>
+            <div class="card__sub">命名空间与仓库名必须真实存在于 Docker Hub</div>
+        </div>
+    </header>
+    <div class="card__body">
+        <form id="addForm" autocomplete="off">
+            <div class="form-grid">
+                <div class="field">
+                    <label class="field__label" for="namespace">命名空间</label>
+                    <input class="input" type="text" id="namespace" placeholder="library" required>
+                </div>
+                <div class="field">
+                    <label class="field__label" for="name">仓库名</label>
+                    <input class="input" type="text" id="name" placeholder="nginx" required>
+                </div>
+                <div class="field">
+                    <label class="field__label" for="displayName">显示名称（可选）</label>
+                    <input class="input" type="text" id="displayName" placeholder="Nginx 官方镜像">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn--primary" id="addSubmit">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                    添加镜像
+                </button>
+                <span class="form-note" id="addNote"></span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card mt-22 reveal" style="--delay:60ms">
+    <header class="card__head">
+        <div>
+            <h3 class="card__title">正在监控</h3>
+            <div class="card__sub" id="imagesCount">--</div>
+        </div>
+    </header>
+    <div class="card__body card__body--flush">
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>镜像</th>
+                        <th class="text-right">累计拉取</th>
+                        <th class="text-right">日均新增</th>
+                        <th>最近观测</th>
+                        <th class="text-right">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="imagesBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/manage.js', v=asset_version) }}"></script>
+{% endblock %}

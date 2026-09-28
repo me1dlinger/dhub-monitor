@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>{{ app_name }}</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233f5e8c'/%3E%3Cpath d='M16 7l7 4-7 4-7-4 7-4z' fill='%23fff'/%3E%3Cpath d='M9 16l7 4 7-4' stroke='%23fff' stroke-width='2.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <script src="{{ url_for('static', filename='js/theme.js', v=asset_version) }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=asset_version) }}">
+</head>
+<body data-auth-enabled="{{ 'true' if auth_enabled else 'false' }}" data-default-days="{{ default_days }}">
+
+    <div id="boot" class="boot">
+        <div class="boot__mark">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>
+        </div>
+        <div class="boot__bar"><span></span></div>
+    </div>
+
+    <div id="auth" class="auth hidden">
+        <div class="auth__card">
+            <div class="auth__mark">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            </div>
+            <h1 class="auth__title">{{ app_name }}</h1>
+            <p class="auth__desc">请输入访问密钥以继续</p>
+            <form id="authForm" autocomplete="off">
+                <div class="field">
+                    <input type="password" id="authKey" class="input" placeholder="访问密钥" required autocomplete="off">
+                </div>
+                <div id="authError" class="auth__error" role="alert"></div>
+                <button type="submit" id="authSubmit" class="btn btn--primary btn--block mt-16">进入面板</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="app" class="app hidden">
+        <header class="topbar">
+            <div class="topbar__inner">
+                <a href="/" class="brand">
+                    <span class="brand__mark">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>
+                    </span>
+                    <span class="brand__name">{{ app_name }}</span>
+                </a>
+                <nav class="nav">
+                    <a href="/" class="nav__link {{ 'is-active' if active_page == 'dashboard' else '' }}">仪表盘</a>
+                    <a href="/manage" class="nav__link {{ 'is-active' if active_page == 'manage' else '' }}">镜像管理</a>
+                    <a href="/logs" class="nav__link {{ 'is-active' if active_page == 'logs' else '' }}">刷新日志</a>
+                </nav>
+                <div class="topbar__end">
+                    <span class="status-pill" id="schedulerPill" title="调度进程状态">
+                        <span class="status-dot"></span>
+                        <span id="schedulerText">调度进程</span>
+                    </span>
+                    <button type="button" class="btn btn--sm btn--icon" id="themeToggle" title="切换主题" aria-label="切换主题">
+                        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+                        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <div id="toasts" class="toasts" aria-live="polite"></div>
+    <div id="modalRoot" class="modal-root"></div>
+
+    <script src="{{ url_for('static', filename='vendor/apexcharts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/common.js', v=asset_version) }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

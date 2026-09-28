@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1 class="page-head__title">刷新日志</h1>
+        <p class="page-head__sub" id="logsSub">每次采集任务的执行记录</p>
+    </div>
+    <div class="page-head__actions">
+        <button type="button" class="btn" id="reloadLogs">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/><path d="M23 4v6h-6"/></svg>
+            重新加载
+        </button>
+    </div>
+</div>
+
+<section class="stats" id="logStats"></section>
+
+<div class="card reveal" style="--delay:60ms">
+    <header class="card__head">
+        <div>
+            <h3 class="card__title">执行记录</h3>
+            <div class="card__sub">点击任意一行可展开每个镜像的采集结果</div>
+        </div>
+    </header>
+    <div class="card__body card__body--flush">
+        <div class="table-wrap">
+            <table class="table table--logs">
+                <thead>
+                    <tr>
+                        <th>开始时间</th>
+                        <th>来源</th>
+                        <th>状态</th>
+                        <th class="text-right">镜像数</th>
+                        <th class="text-right">成功</th>
+                        <th class="text-right">失败</th>
+                        <th class="text-right">耗时</th>
+                        <th class="text-right">详情</th>
+                    </tr>
+                </thead>
+                <tbody id="logsBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/logs.js', v=asset_version) }}"></script>
+{% endblock %}

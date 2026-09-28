@@ -1,0 +1,6 @@
+__pycache__/
+myenv/
+AGENTS.md
+python/data/
+.env
+python/.env

@@ -1,0 +1,25 @@
+# Python 缓存
+__pycache__/
+*.py[cod]
+
+# 本地虚拟环境与编辑器/工具
+myenv/
+.ruff_cache/
+.idea/
+.trae/
+
+# 版本控制与 CI 元数据
+.git
+.github
+AGENTS.md
+
+# 本地/敏感配置（不放镜像）
+.env
+.env.example
+
+# 运行时数据与日志
+data/
+*.db
+*.db-wal
+*.db-shm
+*.log
