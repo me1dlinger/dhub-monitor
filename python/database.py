@@ -33,22 +33,10 @@ def get_db():
     return conn
 
 
-def _columns(conn, table):
-    return {row['name'] for row in conn.execute(f'PRAGMA table_info({table})')}
-
-
 def init_db():
     conn = get_db()
     try:
         with conn:
-            # Drop incompatible tables left behind by the pre-2.0 schema. The
-            # only data stored there is a baseline snapshot, so nothing of
-            # value is lost; images themselves are preserved.
-            if _columns(conn, 'pull_stats') and 'pulls_per_day' not in _columns(conn, 'pull_stats'):
-                conn.execute('DROP TABLE pull_stats')
-            if _columns(conn, 'refresh_logs') and 'duration_ms' not in _columns(conn, 'refresh_logs'):
-                conn.execute('DROP TABLE refresh_logs')
-
             conn.executescript(
                 '''
                 CREATE TABLE IF NOT EXISTS images (
